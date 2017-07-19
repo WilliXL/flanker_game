@@ -4,15 +4,18 @@ import os
 
 def menuLoop(screen):
     quit = False
-    background = pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
-                                   os.sep + 'CL_Brighter.png')
-    screen.blit(background,(0,0))
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-           #if event.key == pygame.K_RETURN:
-           #   gameLoop(screen) 
-           quit = True
-    if not quit: menuLoop(screen)
+    while not quit:
+        quit = False
+        background = pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
+                                       os.sep + 'Menu-Screen.png')
+        screen.blit(background,(0,0))   
+        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+               #if event.key == pygame.K_RETURN:
+               #   gameLoop(screen) 
+               quit = True
+   
 
 
 def main():
