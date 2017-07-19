@@ -12,7 +12,9 @@ def menuLoop(screen):
              (exerciseLoop,941/2100),(taskLoop,1125/2100)]
     while(not quit):
         background = pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
-                                   os.sep + 'CL_Brighter.png')
+                                       os.sep + 'Menu-Screen.png')
+        screen.blit(background,(0,0))   
+        pygame.display.flip()
         screen.blit(background,(0,0))
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -20,7 +22,6 @@ def menuLoop(screen):
                    fishY[0][0](screen)
                    quit = True      
         
-
 
 def compLoop(screen):
     pass
