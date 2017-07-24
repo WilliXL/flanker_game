@@ -19,18 +19,23 @@ def menuLoop(screen):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                if event.key == pygame.K_RETURN:
-                   fishY[0][0](screen)
-                   quit = True      
+                   call = lambda f,arg : f(arg)
+                   call(fishY[0][0],screen)
+                   quit = True
+               elif event.key == pygame.K_LEFT:
+                   fishY = fishY[1:] + [fishY[0]]
+               elif event.key == pygame.K_RIGHT:
+                   fishY = [fishY[-1]] + fishY[:-1]
         
 
 def compLoop(screen):
-    pass
+    print("!")
 def exerLoop(screen):
-    pass
+    print("?")
 def exerciseLoop(screen):
-    pass
+    print(":")
 def taskLoop(screen):
-    pass
+    print("*")
 
 def main():
     pygame.init()
