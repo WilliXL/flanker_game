@@ -20,7 +20,7 @@ def menuLoop(screen):
                                           os.sep + 'cursor.png') 
         cursor = pygame.transform.scale(cursor,(width//15, height//20))
         screen.blit(background,(0,0))        
-        screen.blit(cursor,(630-width//30,fishY[0][1] * height))
+        screen.blit(cursor,((630/1920)*width-(width//30),fishY[0][1] * height))
         pygame.display.flip()
         screen.blit(background,(0,0))
         for event in pygame.event.get():
