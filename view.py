@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 import os
-
+import pygame.time
 
 
 def menuLoop(screen):
@@ -17,7 +17,7 @@ def menuLoop(screen):
         background = pygame.transform.scale(background,screen.get_size())
         cursor = \
         pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
-                                          os.sep + 'cursor.png') 
+                                          os.sep + 'Cursor.png') 
         cursor = pygame.transform.scale(cursor,(width//10,height//20))
         screen.blit(background,(0,0))        
         screen.blit(cursor,(1*width/7,fishY[0][1] * height))
@@ -25,18 +25,44 @@ def menuLoop(screen):
         screen.blit(background,(0,0))
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-               if event.key == pygame.K_RETURN:
-                   call = lambda f,arg : f(arg)
-                   call(fishY[0][0],screen)
-                   quit = True
-               elif event.key == pygame.K_LEFT:
-                   fishY = fishY[1:] + [fishY[0]]
-               elif event.key == pygame.K_RIGHT:
-                   fishY = [fishY[-1]] + fishY[:-1]
+                if event.key == pygame.K_RETURN:
+                    call = lambda f,arg : f(arg)
+                    call(fishY[0][0],screen)
+                    quit = True
+                elif event.key == pygame.K_RIGHT:
+                    fishY = fishY[1:] + [fishY[0]]
+                elif event.key == pygame.K_LEFT:
+                    fishY = [fishY[-1]] + fishY[:-1]
         
 
 def compLoop(screen):
     print("!")
+    difficulty = 0
+    path = os.path.dirname(os.path.realpath(__file__)) + os.sep
+    trialImages = [pygame.image.load(path + 'NR.png'),pygame.image.load(
+                                     path + 'NL.png')]
+    images = [pygame.image.load(path + 'CL_Brighter.png'),pygame.image.load(
+              path + 'CR.png'), pygame.image.load(path + 'ICL.png'),
+              pygame.image.load(path + 'ICR.png')]
+    trial = True
+    time = pygame.time.get_ticks()
+    trialTimer = 0
+    maxTrialTime = 10000
+    incorrectTrials = 0
+    currentImage = None
+    while(trial):
+        delta = pygame.time.get_ticks() - time
+        pygame.draw.rect(screen,(0,0,0),((0,0),screen.get_size()))
+        pygame.display.flip()
+        trialTimer += delta
+        if trialTimer > maxTrialTime:
+            incorrectTrials += 1
+            trialTimer = 0
+            
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    trial = False
 def exerLoop(screen):
     print("?")
 def exerciseLoop(screen):
