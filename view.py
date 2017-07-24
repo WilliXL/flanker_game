@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 import os
-import pygame.time
+import random
 
 
 def menuLoop(screen):
@@ -34,6 +34,8 @@ def menuLoop(screen):
                 elif event.key == pygame.K_LEFT:
                     fishY = [fishY[-1]] + fishY[:-1]
 
+
+
         
 
 def compLoop(screen):
@@ -50,7 +52,11 @@ def compLoop(screen):
     trialTimer = 0
     maxTrialTime = 10000
     incorrectTrials = 0
-    currentImage = None
+    currentOrient = randomInt(0,1)
+    def trialMistake():
+        incorrectTrials += 1
+        trialTimer = 0
+        currentOrient = randomInt(0,1)
     while(trial):
         delta = pygame.time.get_ticks() - time
         pygame.draw.rect(screen,(0,0,0),((0,0),screen.get_size()))
@@ -59,11 +65,19 @@ def compLoop(screen):
         if trialTimer > maxTrialTime:
             incorrectTrials += 1
             trialTimer = 0
-            currentImage = None
+            currentImage = trialImages[random.randInt(0,1)]
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     trial = False
+                if event.key == pygame.K_LEFT:
+                    if currentImage == trialImages[0]:
+                       incorrectTrials += 1
+                       trialTimer = 0
+                       currentImage = 
+
+
+
 def exerLoop(screen):
     print("?")
 def exerciseLoop(screen):
