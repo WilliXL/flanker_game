@@ -11,9 +11,16 @@ def menuLoop(screen):
     fishY = [(compLoop,597/2100),    (exerLoop,765/2100),
              (exerciseLoop,941/2100),(taskLoop,1125/2100)]
     while(not quit):
-        background = pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
-                                       os.sep + 'Menu-Screen.png')
-        screen.blit(background,(0,0))   
+        background = \
+        pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
+                                          os.sep + 'Menu-Screen.png')
+        background = pygame.transform.scale(background,screen.get_size())
+        cursor = \
+        pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
+                                          os.sep + 'cursor.png') 
+        cursor = pygame.transform.scale(cursor,(width//10,height//20))
+        screen.blit(background,(0,0))        
+        screen.blit(cursor,(1*width/7,fishY[0][1] * height))
         pygame.display.flip()
         screen.blit(background,(0,0))
         for event in pygame.event.get():
