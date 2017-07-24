@@ -8,8 +8,8 @@ def menuLoop(screen):
     (width,height) = screen.get_size()
     (midX,midY) = (width/2,height/2)
     quit = False
-    fishY = [(compLoop,597/2100),    (exerLoop,765/2100),
-             (exerciseLoop,941/2100),(taskLoop,1125/2100)]
+    fishY = [(compLoop,440/1080),    (exerLoop,560/1080),
+             (exerciseLoop,680/1080),(taskLoop,800/1080)]
     while(not quit): 
         background = \
         pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
@@ -18,20 +18,20 @@ def menuLoop(screen):
         cursor = \
         pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
                                           os.sep + 'cursor.png') 
-        cursor = pygame.transform.scale(cursor,(width//10,height//20))
+        cursor = pygame.transform.scale(cursor,(width//15, height//20))
         screen.blit(background,(0,0))        
-        screen.blit(cursor,(1*width/7,fishY[0][1] * height))
+        screen.blit(cursor,(630-width//30,fishY[0][1] * height))
         pygame.display.flip()
         screen.blit(background,(0,0))
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-               if event.key == pygame.K_RETURN:
+                if event.key == pygame.K_RETURN:
                    call = lambda f,arg : f(arg)
                    call(fishY[0][0],screen)
                    quit = True
-               elif event.key == pygame.K_LEFT:
+                elif event.key == pygame.K_RIGHT:
                    fishY = fishY[1:] + [fishY[0]]
-               elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_LEFT:
                    fishY = [fishY[-1]] + fishY[:-1]
         
 
