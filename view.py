@@ -42,40 +42,103 @@ def compLoop(screen):
     print("!")
     difficulty = 0
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
-    trialImages = [pygame.image.load(path + 'NR.png'),pygame.image.load(
-                                     path + 'NL.png')]
     images = [pygame.image.load(path + 'CL_Brighter.png'),pygame.image.load(
               path + 'CR.png'), pygame.image.load(path + 'ICL.png'),
               pygame.image.load(path + 'ICR.png')]
+    temp = []
+    for image in images:
+        temp += [pygame.transform.scale(image,screen.get_size())]
+    images = temp
     trial = True
     time = pygame.time.get_ticks()
     trialTimer = 0
     maxTrialTime = 10000
+    trialBlocks = [10000,5000]
+    block = 0
     incorrectTrials = 0
-    currentOrient = randomInt(0,1)
+    orient = random.randint(0,1)
+    congr  = random.randint(0,1)
+    maxTrials = 8
+    trialNum = 0
+    trialsPerBlock = 4
     def trialMistake():
+        nonlocal trialNum
+        trialNum += 1
+        nonlocal incorrectTrials
         incorrectTrials += 1
+        nonlocal trialTimer
+        trialTimer  = 0
+        nonlocal block
+        nonlocal trialsPerBlock
+        if trialNum > trialsPerBlock: block += 1
+        nonlocal orient
+        nonlocal congr 
+        orient = random.randint(0,1)
+        congr = random.randint(0,1)
+        delta = 0
+        time = pygame.time.get_ticks()
+        pygame.draw.rect(screen,(255,0,0),((0,0),screen.get_size()))
+        pygame.display.flip()
+        while(delta < 1000):
+            delta += pygame.time.get_ticks() - time
+            time = pygame.time.get_ticks()
+            pygame.event.get()
+    def trialSuccess():
+        nonlocal trialNum
+        trialNum += 1
+        nonlocal block
+        nonlocal trialsPerBlock
+        if trialNum > trialsPerBlock: block += 1
+        nonlocal trialTimer
+        nonlocal orient
+        nonlocal congr
         trialTimer = 0
-        currentOrient = randomInt(0,1)
+        orient = random.randint(0,1)
+        congr =  random.randint(0,1)
+        delta = 0
+        time = pygame.time.get_ticks()
+        pygame.draw.rect(screen,(255,255,0),((0,0),screen.get_size()))
+        pygame.display.flip()
+        while(delta < 1000):
+            delta += pygame.time.get_ticks() - time
+            time = pygame.time.get_ticks()
+            pygame.event.get()
+    ready = False
+    while(not ready):
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                ready = True
+        pygame.draw.rect(screen,(0,0,255),((0,0),screen.get_size()))
+        pygame.display.flip()
     while(trial):
         delta = pygame.time.get_ticks() - time
+        time = pygame.time.get_ticks()
         pygame.draw.rect(screen,(0,0,0),((0,0),screen.get_size()))
+        screen.blit(images[(congr * 2) + orient],(0,0))
         pygame.display.flip()
         trialTimer += delta
-        if trialTimer > maxTrialTime:
-            incorrectTrials += 1
-            trialTimer = 0
-            currentImage = trialImages[random.randInt(0,1)]
+        if trialTimer > trialBlocks[block]:
+            trialMistake()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     trial = False
+                if event.key == pygame.K_RIGHT:
+                    if orient == 0:
+                        trialMistake()
+                        break
+                    else:
+                        trialSuccess()
+                        break
                 if event.key == pygame.K_LEFT:
-                    if currentImage == trialImages[0]:
-                       incorrectTrials += 1
-                       trialTimer = 0
-                       currentImage = 
-
+                    if orient == 1:
+                        trialMistake()
+                        break
+                    else:
+                        trialSuccess()
+                        break
+        #if incorrectTrials > maxTrials:
+            #if block > 0: block -= 1
 
 
 def exerLoop(screen):
