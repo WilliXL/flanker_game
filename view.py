@@ -8,7 +8,7 @@ def menuLoop(screen):
     (width,height) = screen.get_size()
     (midX,midY) = (width/2,height/2)
     quit = False
-    fishY = [(compLoop,410/1080),    (exerLoop,530/1080),
+    fishY = [(practiceLoop,410/1080),    (exerLoop,530/1080),
              (exerciseLoop,650/1080),(taskLoop,770/1080)]
     while(not quit): 
         background = \
@@ -38,7 +38,7 @@ def menuLoop(screen):
 
         
 
-def compLoop(screen):
+def practiceLoop(screen):
     print("!")
     difficulty = 0
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
@@ -61,6 +61,7 @@ def compLoop(screen):
     maxTrials = 8
     trialNum = 0
     trialsPerBlock = 4
+    blocksPerPractice = 2
     def trialMistake():
         nonlocal trialNum
         trialNum += 1
@@ -68,9 +69,6 @@ def compLoop(screen):
         incorrectTrials += 1
         nonlocal trialTimer
         trialTimer  = 0
-        nonlocal block
-        nonlocal trialsPerBlock
-        if trialNum > trialsPerBlock: block += 1
         nonlocal orient
         nonlocal congr 
         orient = random.randint(0,1)
@@ -86,15 +84,12 @@ def compLoop(screen):
     def trialSuccess():
         nonlocal trialNum
         trialNum += 1
-        nonlocal block
-        nonlocal trialsPerBlock
-        if trialNum > trialsPerBlock: block += 1
         nonlocal trialTimer
         nonlocal orient
         nonlocal congr
         trialTimer = 0
         orient = random.randint(0,1)
-        congr =  random.randint(0,1)
+        congr =  random.randint(0,1) #todo make to a 30-70 ratio
         delta = 0
         time = pygame.time.get_ticks()
         pygame.draw.rect(screen,(255,255,0),((0,0),screen.get_size()))
@@ -111,13 +106,32 @@ def compLoop(screen):
         pygame.draw.rect(screen,(0,0,255),((0,0),screen.get_size()))
         pygame.display.flip()
     while(trial):
+        if trialNum > trialsPerBlock:
+            block += 1
+            trialNum = 0
         delta = pygame.time.get_ticks() - time
         time = pygame.time.get_ticks()
         pygame.draw.rect(screen,(0,0,0),((0,0),screen.get_size()))
+        fontDef = pygame.font.Font("Corbert-Regular.otf",13)
         screen.blit(images[(congr * 2) + orient],(0,0))
+        info = fontDef.render("trial: " + str(trialNum) + " "
+                                       + "block: " + str(block),True,(0,0,0))
+        screen.blit(info,(0,0))
         pygame.display.flip()
         trialTimer += delta
-        if trialTimer > trialBlocks[block]:
+        if block + 1 > blocksPerPractice:
+            cont = False
+            trial = False
+            while(not cont):
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RETURN:
+                            cont = True
+                        elif event.key == pygame.K_LEFT:
+                            pass
+                        elif event.key == pygame.K_RIGHT:
+                            pass
+        elif trialTimer > trialBlocks[block]:
             trialMistake()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
