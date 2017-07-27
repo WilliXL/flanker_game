@@ -2,7 +2,13 @@ import pygame
 from pygame.locals import *
 import os
 import random
-
+#todo [X] make incongruent fish appear more often than congr
+#     [X] arrange the fish to appear in an specific order
+#     [ ] build versions with right left and random
+#     [ ] add instruction screen
+#     [ ] add happy ending
+#     [ ] make better feedback pictures
+#     [ ] make all images the new style 
 
 def menuLoop(screen):
     (width,height) = screen.get_size()
@@ -26,9 +32,9 @@ def menuLoop(screen):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
+                    quit = True
                     call = lambda f,arg : f(arg)
                     call(fishY[0][0],screen)
-                    quit = True
                 elif event.key == pygame.K_RIGHT:
                     fishY = fishY[1:] + [fishY[0]]
                 elif event.key == pygame.K_LEFT:
@@ -44,7 +50,8 @@ def practiceLoop(screen):
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
     images = [pygame.image.load(path + 'CL_Brighter.png'),pygame.image.load(
               path + 'CR.png'), pygame.image.load(path + 'ICL.png'),
-              pygame.image.load(path + 'ICR.png')]
+              pygame.image.load(path + 'ICR.png'),pygame.image.load(path +
+              'MPBNGY.png'),pygame.image.load(path + 'MPBYGY.png')]
     temp = []
     for image in images:
         temp += [pygame.transform.scale(image,screen.get_size())]
@@ -56,8 +63,15 @@ def practiceLoop(screen):
     trialBlocks = [10000,5000]
     block = 0
     incorrectTrials = 0
-    orient = random.randint(0,1)
-    congr  = random.randint(0,1)
+    randomOrder = False
+    rightFirst = False
+    incongrFirst = True 
+    if randomOrder:
+        orient = random.randint(0,1)
+        congr = 1 if random.randint(0,1) > 30 else 0
+    else:
+        orient = rightFirst
+        congr  = incongrFirst
     maxTrials = 8
     trialNum = 0
     trialsPerBlock = 4
@@ -71,8 +85,12 @@ def practiceLoop(screen):
         trialTimer  = 0
         nonlocal orient
         nonlocal congr 
-        orient = random.randint(0,1)
-        congr = random.randint(0,1)
+        if trialNum > 3 or randomOrder:
+            orient = random.randint(0,1)
+            congr = 1 if random.randint(0,1) > 30 else 0
+        else:
+            orient = abs(rightFirst - (trialNum % 2))
+            congr  = abs(incongrFirst - (trialNum // 2))
         delta = 0
         time = pygame.time.get_ticks()
         pygame.draw.rect(screen,(255,0,0),((0,0),screen.get_size()))
@@ -87,9 +105,13 @@ def practiceLoop(screen):
         nonlocal trialTimer
         nonlocal orient
         nonlocal congr
-        trialTimer = 0
-        orient = random.randint(0,1)
-        congr =  random.randint(0,1) #todo make to a 30-70 ratio
+        trialTimer = 0 
+        if trialNum > 3 or randomOrder:
+            orient = random.randint(0,1)
+            congr = 1 if random.randint(0,1) > 30 else 0
+        else:
+            orient = abs(rightFirst - (trialNum % 2))
+            congr  = abs(incongrFirst - (trialNum // 2))
         delta = 0
         time = pygame.time.get_ticks()
         pygame.draw.rect(screen,(255,255,0),((0,0),screen.get_size()))
@@ -106,7 +128,7 @@ def practiceLoop(screen):
         pygame.draw.rect(screen,(0,0,255),((0,0),screen.get_size()))
         pygame.display.flip()
     while(trial):
-        if trialNum > trialsPerBlock:
+        if trialNum >= trialsPerBlock:
             block += 1
             trialNum = 0
         delta = pygame.time.get_ticks() - time
@@ -117,22 +139,29 @@ def practiceLoop(screen):
         info = fontDef.render("trial: " + str(trialNum) + " "
                                        + "block: " + str(block),True,(0,0,0))
         screen.blit(info,(0,0))
-        pygame.display.flip()
         trialTimer += delta
         if block + 1 > blocksPerPractice:
+            
             cont = False
             trial = False
+            select = 1
+            selections = [compLoop,practiceLoop]
             while(not cont):
+                screen.blit(images[4 + select],(0,0))
+                pygame.display.flip()
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_RETURN:
-                            cont = True
+                            cont = True                            
+                            call = lambda f,arg : f(arg)
+                            call(selections[select],screen)
                         elif event.key == pygame.K_LEFT:
-                            pass
+                            select = 1 - select
                         elif event.key == pygame.K_RIGHT:
-                            pass
+                            select = 1 - select
         elif trialTimer > trialBlocks[block]:
-            trialMistake()
+            trialMistake() 
+        pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -140,21 +169,17 @@ def practiceLoop(screen):
                 if event.key == pygame.K_RIGHT:
                     if orient == 0:
                         trialMistake()
-                        break
                     else:
                         trialSuccess()
-                        break
                 if event.key == pygame.K_LEFT:
                     if orient == 1:
                         trialMistake()
-                        break
                     else:
                         trialSuccess()
-                        break
-        #if incorrectTrials > maxTrials:
-            #if block > 0: block -= 1
+    
 
-
+def compLoop(screen):
+    print("%")
 def exerLoop(screen):
     print("?")
 def exerciseLoop(screen):
