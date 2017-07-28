@@ -65,7 +65,7 @@ def practiceLoop(screen):
     incorrectTrials = 0
     randomOrder = False
     rightFirst = False
-    incongrFirst = True 
+    incongrFirst = False
     if randomOrder:
         orient = random.randint(0,1)
         congr = 1 if random.randint(0,1) > 30 else 0
