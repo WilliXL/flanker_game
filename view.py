@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 import os
 import random
-import functions.py
+import functions
 #todo 
 #     [ ] add happy ending
 #     [ ] make comploop
@@ -275,24 +275,21 @@ def compLoop(screen):
             time = pygame.time.get_ticks()
             pygame.event.get()
     ready = False
-    dataDict = createDataDict()
-       
-#    readyImages = [pygame.image.load(path + 'Directions1.png'),
-#                   pygame.image.load(path + 'Directions2.png'),
-#                   pygame.image.load(path + 'Directions3.png'),
-#                   pygame.image.load(path + 'Directions4.png')]
-#    temp = []
-#    for image in readyImages:
-#        temp += [pygame.transform.scale(image,screen.get_size())]
-#    readyImages = temp
-#    for i in range(0,4):   
-#         while(not ready):
-#            for event in pygame.event.get():
-#                if event.type == pygame.KEYDOWN:
-#                    ready = True
-#            screen.blit(readyImages[i],(0,0))
-#            pygame.display.flip()
-#         ready = False
+    dataDict = functions.createDataDict()
+    readyImages = [pygame.image.load(path + 'Directions1.png'),
+                   pygame.image.load(path + 'Directions2.png')]
+    temp = []
+    for image in readyImages:
+        temp += [pygame.transform.scale(image,screen.get_size())]
+    readyImages = temp
+    for i in range(0,len(readyImages)):   
+         while(not ready):
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    ready = True
+            screen.blit(readyImages[i],(0,0))
+            pygame.display.flip()
+         ready = False
     pygame.event.get()
     while(trial):
         if trialNum >= trialsPerBlock:
