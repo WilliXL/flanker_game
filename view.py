@@ -3,7 +3,6 @@ from pygame.locals import *
 import os
 import random
 import functions
-import GIFImage_ext
 #todo 
 #     [ ] add happy ending
 #     [ ] make comploop
