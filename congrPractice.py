@@ -86,12 +86,12 @@ def practiceLoop(screen):
         nonlocal incorrectTrials
         incorrectTrials += 1
         nonlocal trialTimer
-        trialTimer  = 0
+        trialTimer = 0
         nonlocal orient
         nonlocal congr 
         if trialNum > 3 or randomOrder:
             orient = random.randint(0,1)
-            congr = 1 if random.randint(0,1) > 30 else 0
+            congr  = 1 if random.randint(0,1) > 30 else 0
         else:
             orient = abs(rightFirst - (trialNum % 2))
             congr  = abs(incongrFirst - (trialNum // 2))
@@ -102,7 +102,7 @@ def practiceLoop(screen):
         pygame.display.flip()
         while(delta < 1000):
             delta += pygame.time.get_ticks() - time
-            time = pygame.time.get_ticks()
+            time   = pygame.time.get_ticks()
             pygame.event.get()
     def trialSuccess():
         nonlocal trialNum
@@ -113,7 +113,7 @@ def practiceLoop(screen):
         trialTimer = 0 
         if trialNum > 3 or randomOrder:
             orient = random.randint(0,1)
-            congr = 1 if random.randint(0,1) > 30 else 0
+            congr  = 1 if random.randint(0,1) > 30 else 0
         else:
             orient = abs(rightFirst - (trialNum % 2))
             congr  = abs(incongrFirst - (trialNum // 2))
@@ -124,7 +124,7 @@ def practiceLoop(screen):
         pygame.display.flip()
         while(delta < 1000):
             delta += pygame.time.get_ticks() - time
-            time = pygame.time.get_ticks()
+            time   = pygame.time.get_ticks()
             pygame.event.get()
     ready = False
     
