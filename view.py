@@ -36,6 +36,12 @@ def menuLoop(screen):
                     fishY = fishY[1:] + [fishY[0]]
                 elif event.key == pygame.K_LEFT:
                     fishY = [fishY[-1]] + fishY[:-1]
+                #for degug purpose
+                elif event.key == pygame.K_ESCAPE: 
+                    quit = True
+                    pygame.quit()
+                    break
+
 
 
 
@@ -190,6 +196,7 @@ def practiceLoop(screen):
                         trialMistake()
                     else:
                         trialSuccess()
+    return                    
     
 
         
@@ -331,8 +338,8 @@ def exerciseLoop(screen):
     print(":")
     difficulty = 0
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
-    images = [pygame.image.load(path + 'CLB.png'),pygame.image.load(
-              path + 'CRB.png'), pygame.image.load(path +
+    images = [pygame.image.load(path + 'NL.png'),pygame.image.load(
+              path + 'NR.png'), pygame.image.load(path +
               'MPBNGY.png'),pygame.image.load(path + 'MPBYGY.png')]
     temp = []
     for image in images:
@@ -483,6 +490,15 @@ def exerciseLoop(screen):
 def taskLoop(screen):
     print("*")
 
+
+
+
+
+
+
+
+
+
 def main():
     pygame.init()
     #class Struct(object): pass
@@ -497,5 +513,6 @@ def main():
     screen.blit(background,(0,0))
     pygame.display.flip()
     menuLoop(screen)
+    return
         
 main()
