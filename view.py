@@ -3,7 +3,6 @@ from pygame.locals import *
 import os
 import random
 import functions
-import gifs
 #todo 
 #     [ ] add happy ending
 #     [ ] make comploop
