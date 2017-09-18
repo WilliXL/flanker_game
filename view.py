@@ -100,6 +100,7 @@ def practiceLoop(screen):
             congr  = abs(incongrFirst - (trialNum // 2))
         delta = 0
         time = pygame.time.get_ticks()
+        #screen.blit()
         screen.blit(incorrectImage,(0,0))
         #pygame.draw.rect(screen,(255,0,0),((0,0),screen.get_size()))
         pygame.display.flip()
@@ -206,11 +207,11 @@ def compLoop(screen):
     print("*")
     difficulty = 0
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
+    temp = []
     images = [pygame.image.load(path + 'CLB.png'),pygame.image.load(
               path + 'CRB.png'), pygame.image.load(path + 'ILB.png'),
               pygame.image.load(path + 'IRB.png'),pygame.image.load(path +
               'MPBNGY.png'),pygame.image.load(path + 'MPBYGY.png')]
-    temp = []
     for image in images:
         temp += [pygame.transform.scale(image,screen.get_size())]
     images = temp
@@ -230,29 +231,30 @@ def compLoop(screen):
     else:
         orient = rightFirst
         congr  = incongrFirst
-    maxTrials = 8
+    maxTrials = 210
     trialNum = 0
-    trialsPerBlock = 4
-    blocksPerGame = 2
+    trialsPerBlock = 7
+    blocksPerGame = 30
     incorrectImage = pygame.image.load(path + 'incorrect.png')
     correctImage   = pygame.image.load(path + 'correct.png')
     incorrectImage = pygame.transform.scale(incorrectImage,screen.get_size())
     correctImage   = pygame.transform.scale(  correctImage,screen.get_size())
+    data = functions.createDataDict()
     def trialMistake():
         nonlocal trialNum
         trialNum += 1
         nonlocal incorrectTrials
         incorrectTrials += 1
         nonlocal trialTimer
-        trialTimer  = 0
         nonlocal orient
         nonlocal congr 
-        if trialNum > 3 or randomOrder:
-            orient = random.randint(0,1)
-            congr = 1 if random.randint(0,1) > 30 else 0
-        else:
-            orient = abs(rightFirst - (trialNum % 2))
-            congr  = abs(incongrFirst - (trialNum // 2))
+        functions.fill_trial(data,[
+            ("" if congr else "in") + "conrguent",
+            trialNum,block,"incorrect" if trialTimer != -1 else "toolong",
+            trialTimer])           
+        trialTimer  = 0
+        orient = random.randint(0,1)
+        congr = 1 if random.randint(0,100) > 30 else 0
         delta = 0
         time = pygame.time.get_ticks()
         screen.blit(incorrectImage,(0,0))
@@ -261,19 +263,20 @@ def compLoop(screen):
             delta += pygame.time.get_ticks() - time
             time = pygame.time.get_ticks()
             pygame.event.get()
+        nonlocal time
+        time = pygame.time.get_ticks()
     def trialSuccess():
         nonlocal trialNum
         trialNum += 1
         nonlocal trialTimer
         nonlocal orient
         nonlocal congr
+        functions.fill_trial(data,[
+            ("" if congr else "in") + "conrguent",
+            trialNum,block,"correct",trialTimer])           
         trialTimer = 0 
-        if trialNum > 3 or randomOrder:
-            orient = random.randint(0,1)
-            congr = 1 if random.randint(0,1) > 30 else 0
-        else:
-            orient = abs(rightFirst - (trialNum % 2))
-            congr  = abs(incongrFirst - (trialNum // 2))
+        orient = random.randint(0,1)
+        congr = 1 if random.randint(0,100) > 30 else 0
         delta = 0
         time = pygame.time.get_ticks()
         screen.blit(correctImage,(0,0))
@@ -282,39 +285,53 @@ def compLoop(screen):
             delta += pygame.time.get_ticks() - time
             time = pygame.time.get_ticks()
             pygame.event.get()
+        nonlocal time
+        time = pygame.time.get_ticks()
     ready = False
     dataDict = functions.createDataDict()
-    readyImages = [pygame.image.load(path + 'Directions1.png'),
-                   pygame.image.load(path + 'Directions2.png')]
+    readyImages = []
+    for i in range(0,11):
+        readyImages += [pygame.image.load(path + 'maps/map-' + str(i) + '.png')]
     temp = []
     for image in readyImages:
         temp += [pygame.transform.scale(image,screen.get_size())]
     readyImages = temp
-    for i in range(0,len(readyImages)):   
-         while(not ready):
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    ready = True
-            screen.blit(readyImages[i],(0,0))
-            pygame.display.flip()
-         ready = False
+#    for i in range(0,len(readyImages)):         
+#        while(not ready):
+#            for event in pygame.event.get():
+#                if event.type == pygame.KEYDOWN:
+#                    ready = True
+#            screen.blit(readyImages[i],(0,0))
+#            pygame.display.flip()
+#        ready = False
     pygame.event.get()
-    while(trial):
+    while(trial): 
         if trialNum >= trialsPerBlock:
             block += 1
             trialNum = 0
+            ready = False
+        if trialNum == 0 and block % 3 == 0: 
+            while(not ready):
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        ready = True
+                screen.blit(readyImages[block // 3],(0,0))
+                pygame.display.flip()
+            pygame.event.get()
+            time = pygame.time.get_ticks()
         delta = pygame.time.get_ticks() - time
         time = pygame.time.get_ticks()
         pygame.draw.rect(screen,(0,0,0),((0,0),screen.get_size()))
         fontDef = pygame.font.Font("Corbert-Regular.otf",13)
         screen.blit(images[(congr * 2) + orient],(0,0))
-        info = fontDef.render("trial: " + str(trialNum) + " "
+        info = fontDef.render("round: " + str(trialNum) + " "
                                        + "block: " + str(block),True,(0,0,0))
         screen.blit(info,(0,0))
         trialTimer += delta
         if block + 1 > blocksPerGame:
           break
-        elif trialTimer > trialBlocks[block]:
+        elif trialTimer > functions.trialTime(block):
+            trialTimer = -1
             trialMistake() 
         pygame.display.flip()
         for event in pygame.event.get():
@@ -331,7 +348,9 @@ def compLoop(screen):
                         trialMistake()
                     else:
                         trialSuccess()
-    
+                if event.key == pygame.K_DOWN:
+                    trialNum += 1
+    functions.createCSV(data) 
 
 def exerLoop(screen):
     print("?")
@@ -339,8 +358,10 @@ def exerciseLoop(screen):
     print(":")
     difficulty = 0
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
-    images = [pygame.image.load(path + 'NL.png'),pygame.image.load(
-              path + 'NR.png'), pygame.image.load(path +
+
+    images = [pygame.image.load(path + 'CLB.png'),pygame.image.load(
+              path + 'CRB.png'), pygame.image.load(path + 'ILB.png'),
+              pygame.image.load(path + 'IRB.png'),pygame.image.load(path +
               'MPBNGY.png'),pygame.image.load(path + 'MPBYGY.png')]
     temp = []
     for image in images:
