@@ -3,7 +3,7 @@ from pygame.locals import *
 import os
 import random
 import functions
-import gifs
+#import gifs
 #todo 
 #     [ ] add happy ending
 #     [ ] make comploop
@@ -392,6 +392,8 @@ def exerciseLoop(screen):
     incorrectImage = pygame.transform.scale(incorrectImage,screen.get_size())
     correctImage   = pygame.transform.scale(  correctImage,screen.get_size())
     def trialMistake():
+        pygame.mixer.music.load(path + "Ratchet05.mp3")
+        pygame.mixer.music.play()
         nonlocal trialNum
         trialNum += 1
         nonlocal incorrectTrials
@@ -416,6 +418,8 @@ def exerciseLoop(screen):
             time = pygame.time.get_ticks()
             pygame.event.get()
     def trialSuccess():
+        pygame.mixer.music.load(path + "JarMus02.mp3")
+        pygame.mixer.music.play()
         nonlocal trialNum
         trialNum += 1
         nonlocal trialTimer
