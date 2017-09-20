@@ -256,12 +256,12 @@ def compLoop(screen):
         orient = random.randint(0,1)
         congr = 1 if random.randint(0,100) > 30 else 0
         delta = 0
-        time = pygame.time.get_ticks()
+        timeP = pygame.time.get_ticks()
         screen.blit(incorrectImage,(0,0))
         pygame.display.flip()
         while(delta < 1000):
-            delta += pygame.time.get_ticks() - time
-            time = pygame.time.get_ticks()
+            delta += pygame.time.get_ticks() - timeP
+            timeP = pygame.time.get_ticks()
             pygame.event.get()
         nonlocal time
         time = pygame.time.get_ticks()
@@ -278,12 +278,12 @@ def compLoop(screen):
         orient = random.randint(0,1)
         congr = 1 if random.randint(0,100) > 30 else 0
         delta = 0
-        time = pygame.time.get_ticks()
+        timeP = pygame.time.get_ticks()
         screen.blit(correctImage,(0,0))
         pygame.display.flip()
         while(delta < 1000):
-            delta += pygame.time.get_ticks() - time
-            time = pygame.time.get_ticks()
+            delta += pygame.time.get_ticks() - timeP
+            timeP = pygame.time.get_ticks()
             pygame.event.get()
         nonlocal time
         time = pygame.time.get_ticks()
