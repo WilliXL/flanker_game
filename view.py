@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import os
 import random
+import gif
 import functions
 import gifs
 #todo 
@@ -146,6 +147,14 @@ def practiceLoop(screen):
                 if event.type == pygame.KEYDOWN:
                     ready = True
             screen.blit(readyImages[i],(0,0))
+            if i == 1:
+                g = gif.GIFImage("lc.gif")
+                g.play()
+                g.render(screen,(0,0))
+            if i == 2:
+                g = gif.GIFImage("rc.gif")
+                g.play() 
+                g.render(screen,(0,0))
             pygame.display.flip()
          ready = False
     pygame.event.get()
