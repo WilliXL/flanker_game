@@ -5,7 +5,7 @@ from pygame.locals import *
 import time
 
 class GIFImage(object):
-    def __init__(self, filename):
+    def __init__(self, filename, otherstuff):
         self.filename = filename
         self.image = Image.open(filename)
         self.original_size = self.image.size
@@ -23,6 +23,7 @@ class GIFImage(object):
         self.breakpoint = len(self.frames)-1
         self.startpoint = 0
         self.reversed = False
+        print("<<<<")
  
 
     def get_rect(self):
@@ -111,6 +112,7 @@ class GIFImage(object):
             pass
 
     def render(self, screen, pos):
+        print(">>>")
         if self.running:
             if time.time() - self.ptime > self.frames[self.cur][1]:
                 if self.reversed:
@@ -119,6 +121,7 @@ class GIFImage(object):
                         self.cur = self.breakpoint
                 else:
                     self.cur += 1
+                    print("<><><>")
                     if self.cur > self.breakpoint:
                         self.cur = self.startpoint
 

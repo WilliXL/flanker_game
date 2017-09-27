@@ -5,16 +5,13 @@ import random
 import gif
 import functions
 import gifs
-#todo 
-#     [ ] add happy ending
-#     [ ] make comploop
 
 def menuLoop(screen):
     (width,height) = screen.get_size()
     (midX,midY) = (width/2,height/2)
     quit = False
     fishY = [(practiceLoop,410/1080),    (exerLoop,530/1080),
-             (exerciseLoop,650/1080),(taskLoop,770/1080)]
+             (practiceLoop,650/1080),(taskLoop,770/1080)]
     while(not quit): 
         background = \
         pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
@@ -141,6 +138,7 @@ def practiceLoop(screen):
     for image in readyImages:
         temp += [pygame.transform.scale(image,screen.get_size())]
     readyImages = temp
+    g = gif.GIFImage("lc.gif")
     for i in range(0,4):   
          while(not ready):
             for event in pygame.event.get():
@@ -148,11 +146,11 @@ def practiceLoop(screen):
                     ready = True
             screen.blit(readyImages[i],(0,0))
             if i == 1:
-                g = gif.GIFImage("lc.gif")
+                if g.filename != "lc.gif": g = gif.GIFImage("lc.gif")
                 g.play()
                 g.render(screen,(0,0))
             if i == 2:
-                g = gif.GIFImage("rc.gif")
+                if g.filename != "rc.gif": g = gif.GIFImage("rc.gif")
                 g.play() 
                 g.render(screen,(0,0))
             pygame.display.flip()

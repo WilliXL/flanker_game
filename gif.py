@@ -54,7 +54,7 @@ class GIFImage(object):
                 except:
                     duration = 100
 
-                duration *= .001 #convert to milliseconds!
+                duration *= .001 #convert to milliseconds! 
                 cons = False
 
                 x0, y0, x1, y1 = (0, 0) + image.size
@@ -102,13 +102,15 @@ class GIFImage(object):
 
     def render(self, screen, pos):
         if self.running:
-            if time.time() - self.ptime > self.frames[self.cur][1]:
+            print(time.time(),self.ptime,time.time() - self.ptime,self.frames[self.cur][1])
+            if time.time() - self.ptime > self.frames[self.cur][1]:    
                 if self.reversed:
                     self.cur -= 1
                     if self.cur < self.startpoint:
                         self.cur = self.breakpoint
                 else:
                     self.cur += 1
+                    print("<><>")
                     if self.cur > self.breakpoint:
                         self.cur = self.startpoint
 
