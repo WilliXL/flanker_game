@@ -6,6 +6,8 @@ import gif
 import functions
 
 maps = []
+pos = []
+neg = []
 def loadMaps(screen):
     maps = []
     (width,height) = screen.get_size()
@@ -14,7 +16,20 @@ def loadMaps(screen):
         maps += [gif.GIFImage(path + 'map' + str(i) + '.gif')]
         pygame.draw.rect(screen,Color("yellow"),(width/10,(height/10) * 8,(width/10) * i,height/9))
         pygame.display.flip()   
+    pygame.draw.rect(screen,Color("blue"),(width/10,(height/10) * 8,(width/10) * 7,height/9))
     return maps
+def loadFeedback(screen):
+    pos = []
+    neg = ([],[])
+    (width,height) = screen.get_size()
+    path = os.path.dirname(os.path.realpath(__file__)) + os.sep
+    for i in range(7):
+        pos += [gif.GIFImage(path + 'Reward' + str(i + 1) + '---Pos.gif')]
+        pygame.draw.rect(screen,Color("blue"),(width/10,(height/10) * 8,(width/10) * i,height/9))
+        pygame.display.flip()
+    
+    pygame.draw.rect(screen,Color("blue"),(width/10,(height/10) * 8,(width/10) * 7,height/9))
+    return (pos,neg)
 def menuLoop(screen):
     (width,height) = screen.get_size()
     (midX,midY) = (width/2,height/2)
@@ -23,6 +38,9 @@ def menuLoop(screen):
              (stepLoop,650/1080),(taskLoop,770/1080)]
     global maps
     maps = loadMaps(screen) 
+    global pos
+    global neg
+    (pos,neg) = loadFeedback(screen)
     while(not quit):
         background = \
         pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
@@ -317,6 +335,8 @@ def clickLoop(screen):
         screen.blit(correctImage,(0,0))
         #pygame.draw.rect(screen,(255,255,0),((0,0),screen.get_size()))
         pygame.display.flip()
+        pos[0].renderOnce(screen,(0,0))
+        pygame.display.flip()
         while(delta < 1000):
             delta += pygame.time.get_ticks() - time
             time = pygame.time.get_ticks()
@@ -349,7 +369,7 @@ def clickLoop(screen):
             if i == 4:
                 if g.filename != "rc.gif": g = gif.GIFImage("rc.gif")
                 g.play() 
-                g.render(screen,(width/4,height/3))
+                g.render(screen,(width/3,height/2))
             pygame.display.flip()
          ready = False
     pygame.event.get()
