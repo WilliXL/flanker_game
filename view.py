@@ -5,6 +5,7 @@ import random
 import gif
 import functions
 
+readyImages = []
 maps = []
 pos = []
 neg = []
@@ -13,7 +14,9 @@ def loadMaps(screen):
     (width,height) = screen.get_size()
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
     for i in range(7):
-        maps += [gif.GIFImage(path + 'map' + str(i) + '.gif')]
+        g = gif.GIFImage(path + 'map' + str(i) + '.gif')
+        g.scale(screen.get_size())
+        maps += [g]
         pygame.draw.rect(screen,Color("yellow"),(width/10,(height/10) * 8,(width/10) * i,height/9))
         pygame.display.flip()   
     pygame.draw.rect(screen,Color("blue"),(width/10,(height/10) * 8,(width/10) * 7,height/9))
@@ -24,12 +27,25 @@ def loadFeedback(screen):
     (width,height) = screen.get_size()
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
     for i in range(7):
-        pos += [gif.GIFImage(path + 'Reward' + str(i + 1) + '---Pos.gif')]
+        g = gif.GIFImage(path + 'Reward' + str(i + 1) + '---Pos.gif')
+        g.scale(screen.get_size())
+        pos += [g]
         pygame.draw.rect(screen,Color("blue"),(width/10,(height/10) * 8,(width/10) * i,height/9))
         pygame.display.flip()
     
     pygame.draw.rect(screen,Color("blue"),(width/10,(height/10) * 8,(width/10) * 7,height/9))
     return (pos,neg)
+def loadReady():
+    global readyImages
+    path = os.path.dirname(os.path.realpath(__file__)) + os.sep
+    readyImages = [pygame.image.load(path + 'intro_1.png'),
+                   pygame.image.load(path + 'intro_2.png'),
+                   pygame.image.load(path + 'Directions1.png'),
+                   pygame.image.load(path + 'Directions2.png'),
+                   pygame.image.load(path + 'Directions3.png'),
+                   pygame.image.load(path + 'Directions3.5.png'),
+                   pygame.image.load(path + 'Directions4.png'),
+                   pygame.image.load(path + 'Directions5.png')]
 def menuLoop(screen):
     (width,height) = screen.get_size()
     (midX,midY) = (width/2,height/2)
@@ -38,6 +54,7 @@ def menuLoop(screen):
              (stepLoop,650/1080),(taskLoop,770/1080)]
     global maps
     maps = loadMaps(screen) 
+    loadReady()
     global pos
     global neg
     (pos,neg) = loadFeedback(screen)
@@ -157,24 +174,26 @@ def stepLoop(screen):
             time = pygame.time.get_ticks()
             pygame.event.get()
     ready = False
-    
-    readyImages = [pygame.image.load(path + 'intro_1.png'),
-                   pygame.image.load(path + 'intro_2.png'),
-                   pygame.image.load(path + 'Directions1.png'),
-                   pygame.image.load(path + 'Directions2.png'),
-                   pygame.image.load(path + 'Directions3.png'),
-                   pygame.image.load(path + 'Directions3.5.png'),
-                   pygame.image.load(path + 'Directions4.png'),
-                   pygame.image.load(path + 'Directions5.png')]
+    global readyImages 
     temp = []
     for image in readyImages:
         temp += [pygame.transform.scale(image,screen.get_size())]
     readyImages = temp
     g = gif.GIFImage("lc.gif")
     bubble = gif.GIFImage("bubbleanimation.gif")
+    pygame.draw.rect(screen,Color("red"),(0,0,10,10))
+    pygame.display.flip()
+    bubble.scale(screen.get_size())
+    pygame.draw.rect(screen,Color("green"),(0,0,10,10))
     (width,height) = screen.get_size()
     pressed = False
     done = False
+    ls = gif.GIFImage("ls.gif")
+    ls.scale(screen.get_size())
+    rs = gif.GIFImage("rs.gif")
+    rs.scale(screen.get_size())
+    bs = gif.GIFImage("bs.gif")
+    bs.scale(screen.get_size())
     for i in range(0,8):   
          while(not ready):
             for event in pygame.event.get():
@@ -185,19 +204,19 @@ def stepLoop(screen):
                     bubble.running = True
             screen.blit(readyImages[i],(0,0))
             if i == 3:
-                if g.filename != "ls.gif": g = gif.GIFImage("ls.gif")
+                if g.filename != "ls.gif": g = ls
                 g.play()
                 g.render(screen,(0,0))
             if i == 4:
-                if g.filename != "rs.gif": g = gif.GIFImage("rs.gif")
+                if g.filename != "rs.gif": g = rs
                 g.play() 
                 g.render(screen,(0,0))
             if i == 5:
-                if g.filename != "bs.gif": g = gif.GIFImage("bs.gif")
+                if g.filename != "bs.gif": g = bs
                 g.play() 
                 g.render(screen,(0,0))
             if pressed:
-                    bubble.renderOnce(screen,(0,0))
+                    bubble.renderOnceAtSpeed(screen,(0,0),1)
             pygame.display.flip()
             ready = not bubble.running and pressed or done
          ready = False

@@ -117,6 +117,11 @@ class GIFImage(object):
         screen.blit(self.frames[self.cur][0], pos)
 
 
+    def scale(self,si):
+        (width,height) = si
+        for i in range(len(self.frames)):
+            self.frames[i][0] = pygame.transform.scale(self.frames[i][0],(width,height))
+
     def renderOnce(self, screen, pos):
         if self.running:
             if time.time() - self.ptime > self.frames[self.cur][1]:    
@@ -135,6 +140,23 @@ class GIFImage(object):
 
         screen.blit(self.frames[self.cur][0], pos)
 
+    def renderOnceAtSpeed(self, screen, pos,speed):
+        if self.running:
+            if time.time() - self.ptime > self.frames[self.cur][1]:    
+                if self.reversed:
+                    self.cur -= speed
+                    if self.cur < self.startpoint:
+                        self.running = False
+                        self.cur += speed
+                else:
+                    self.cur += speed
+                    if self.cur > self.breakpoint:
+                        self.running = False
+                        self.cur -= speed
+
+                self.ptime = time.time()
+
+        screen.blit(self.frames[self.cur][0], pos)
 
     def seek(self, num):
         self.cur = num
