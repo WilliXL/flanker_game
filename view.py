@@ -47,6 +47,10 @@ def loadReady():
                    pygame.image.load(path + 'Directions4.png'),
                    pygame.image.load(path + 'Directions5.png')]
 def menuLoop(screen):
+    path = os.path.dirname(os.path.realpath(__file__)) + os.sep
+    pygame.mixer.init()
+    pygame.mixer.music.load(path + "temp.mp3")
+    pygame.mixer.music.set_volume(.5)
     (width,height) = screen.get_size()
     (midX,midY) = (width/2,height/2)
     quit = False
@@ -59,6 +63,9 @@ def menuLoop(screen):
     global neg
     (pos,neg) = loadFeedback(screen)
     while(not quit):
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.rewind()
+            pygame.mixer.music.play()
         background = \
         pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
                                           os.sep + 'Menu Screen 3.0.png')
@@ -93,7 +100,10 @@ def menuLoop(screen):
 def stepLoop(screen):
     print("!")
     difficulty = 0
+    pygame.mixer.music.load(path + "temp.mp3")
+    pygame.mixer.music.set_volume(.5)
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
+    pygame.mixer.music.play()
     images = [pygame.image.load(path + 'CLB.png'),pygame.image.load(
               path + 'CRB.png'), pygame.image.load(path + 'ILB.png'),
               pygame.image.load(path + 'IRB.png'),pygame.image.load(path +
@@ -216,13 +226,17 @@ def stepLoop(screen):
                 g.play() 
                 g.render(screen,(0,0))
             if pressed:
-                    bubble.renderOnceAtSpeed(screen,(0,0),1)
+                    bubble.renderOnceAtSpeed(screen,(0,0),2)
             pygame.display.flip()
             ready = not bubble.running and pressed or done
          ready = False
          pressed = False
+         bubble.rewind()
     pygame.event.get()
     while(trial):
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.rewind()
+            pygame.mixer.music.play()
         if trialNum >= trialsPerBlock:
             block += 1
             trialNum = 0
@@ -277,7 +291,11 @@ def stepLoop(screen):
 
 def clickLoop(screen):
     print("!")
+    path = os.path.dirname(os.path.realpath(__file__)) + os.sep
+    pygame.mixer.music.load(path + "temp.mp3")
+    pygame.mixer.music.set_volume(.5)
     difficulty = 0
+    pygame.mixer.music.play()
     path = os.path.dirname(os.path.realpath(__file__)) + os.sep
     images = [pygame.image.load(path + 'CLB.png'),pygame.image.load(
               path + 'CRB.png'), pygame.image.load(path + 'ILB.png'),
@@ -393,6 +411,9 @@ def clickLoop(screen):
          ready = False
     pygame.event.get()
     while(trial):
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.rewind()
+            pygame.mixer.music.play()
         if trialNum >= trialsPerBlock:
             block += 1
             trialNum = 0
@@ -447,9 +468,16 @@ def clickLoop(screen):
         
 
 def compLoop(screen):
+    path = os.path.dirname(os.path.realpath(__file__)) + os.sep
+    effects  = pygame.mixer.Channel(1)
+    SoundNeg = pygame.mixer.Sound(path + "Ratchet05.wav")
+    SoundPos = pygame.mixer.Sound(path + "JarMus02.wav")
+    SoundNeg.set_volume(.9)
+    SoundPos.set_volume(.9)
+    pygame.mixer.music.load(path + "temp.mp3")
+    pygame.mixer.music.set_volume(.5)
     print("*")
     difficulty = 0
-    path = os.path.dirname(os.path.realpath(__file__)) + os.sep
     temp = []
     images = [pygame.image.load(path + 'CLB.png'),pygame.image.load(
               path + 'CRB.png'), pygame.image.load(path + 'ILB.png'),
@@ -490,6 +518,7 @@ def compLoop(screen):
     data = functions.createDataDict()
     global maps
     def trialMistake():
+        effects.play(SoundNeg)
         nonlocal trialNum
         trialNum += 1
         nonlocal mistakes
@@ -517,6 +546,7 @@ def compLoop(screen):
         nonlocal time
         time = pygame.time.get_ticks()
     def trialSuccess():
+        effects.play(SoundPos)
         nonlocal trialNum
         trialNum += 1
         nonlocal trialTimer
@@ -560,6 +590,9 @@ def compLoop(screen):
     reset = False
     
     while(trial): 
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.rewind()
+            pygame.mixer.music.play()
         if trialNum >= trialsPerBlock:
             block += 1
             trialNum = 0
