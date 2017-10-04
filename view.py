@@ -128,7 +128,9 @@ def stepLoop(screen):
             pygame.event.get()
     ready = False
     
-    readyImages = [pygame.image.load(path + 'Directions1.png'),
+    readyImages = [pygame.image.load(path + 'intro_1.png'),
+                   pygame.image.load(path + 'intro_2.png'),
+                   pygame.image.load(path + 'Directions1.png'),
                    pygame.image.load(path + 'Directions2.png'),
                    pygame.image.load(path + 'Directions3.png'),
                    pygame.image.load(path + 'Directions3.5.png'),
@@ -139,27 +141,37 @@ def stepLoop(screen):
         temp += [pygame.transform.scale(image,screen.get_size())]
     readyImages = temp
     g = gif.GIFImage("lc.gif")
+    bubble = gif.GIFImage("bubbleanimation.gif")
     (width,height) = screen.get_size()
-    for i in range(0,6):   
+    pressed = False
+    done = False
+    for i in range(0,8):   
          while(not ready):
             for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONUP:
+                    done = True
                 if event.type == pygame.KEYDOWN:
-                    ready = True
+                    pressed = True
+                    bubble.running = True
             screen.blit(readyImages[i],(0,0))
-            if i == 1:
+            if i == 3:
                 if g.filename != "ls.gif": g = gif.GIFImage("ls.gif")
                 g.play()
                 g.render(screen,(0,0))
-            if i == 2:
+            if i == 4:
                 if g.filename != "rs.gif": g = gif.GIFImage("rs.gif")
                 g.play() 
                 g.render(screen,(0,0))
-            if i == 3:
+            if i == 5:
                 if g.filename != "bs.gif": g = gif.GIFImage("bs.gif")
                 g.play() 
                 g.render(screen,(0,0))
+            if pressed:
+                    bubble.renderOnce(screen,(0,0))
             pygame.display.flip()
+            ready = not bubble.running and pressed or done
          ready = False
+         pressed = False
     pygame.event.get()
     while(trial):
         if trialNum >= trialsPerBlock:
@@ -299,7 +311,9 @@ def clickLoop(screen):
             pygame.event.get()
     ready = False
     
-    readyImages = [pygame.image.load(path + 'Directions1.png'),
+    readyImages = [pygame.image.load(path + 'intro_1.png'),
+                   pygame.image.load(path + 'intro_2.png'),
+                   pygame.image.load(path + 'Directions1.png'),
                    pygame.image.load(path + 'Directions2.png'),
                    pygame.image.load(path + 'Directions3.png'),
                    pygame.image.load(path + 'Directions4.png'),
@@ -310,17 +324,17 @@ def clickLoop(screen):
     readyImages = temp
     g = gif.GIFImage("lc.gif")
     (width,height) = screen.get_size()
-    for i in range(0,5):   
+    for i in range(0,7):   
          while(not ready):
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     ready = True
             screen.blit(readyImages[i],(0,0))
-            if i == 1:
+            if i == 3:
                 if g.filename != "lc.gif": g = gif.GIFImage("lc.gif")
                 g.play()
                 g.render(screen,(0,height/4))
-            if i == 2:
+            if i == 4:
                 if g.filename != "rc.gif": g = gif.GIFImage("rc.gif")
                 g.play() 
                 g.render(screen,(width/4,height/3))
@@ -482,6 +496,9 @@ def compLoop(screen):
     for image in readyImages:
         temp += [pygame.transform.scale(image,screen.get_size())]
     readyImages = temp
+    maps = []
+    for i in range(7):
+        maps += [gif.GIFImage(path + 'map' + str(i) + '.gif')]    
 #    for i in range(0,len(readyImages)):         
 #        while(not ready):
 #            for event in pygame.event.get():
@@ -507,8 +524,8 @@ def compLoop(screen):
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         ready = True
-                print(level)
-                screen.blit(readyImages[level],(0,0))
+                #screen.blit(readyImages[level],(0,0))
+                maps[level].renderOnce(screen,(0,0))
                 pygame.display.flip()
             if mistakes >= 3 * trialsPerBlock // 2:
                 block -= 3
@@ -525,7 +542,11 @@ def compLoop(screen):
         trialTimer += delta
         if block + 1 > blocksPerGame:
           break
-        elif trialTimer > functions.trialTime(block):
+        if level > 7:
+          break
+        if pygame.time.get_ticks() > 15 * 60 * 1000:
+          break
+        if trialTimer > functions.trialTime(block):
             trialTimer = -1
             trialMistake() 
         pygame.display.flip()

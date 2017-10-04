@@ -116,6 +116,26 @@ class GIFImage(object):
 
         screen.blit(self.frames[self.cur][0], pos)
 
+
+    def renderOnce(self, screen, pos):
+        if self.running:
+            if time.time() - self.ptime > self.frames[self.cur][1]:    
+                if self.reversed:
+                    self.cur -= 1
+                    if self.cur < self.startpoint:
+                        self.running = False
+                        self.cur += 1
+                else:
+                    self.cur += 1
+                    if self.cur > self.breakpoint:
+                        self.running = False
+                        self.cur -= 1
+
+                self.ptime = time.time()
+
+        screen.blit(self.frames[self.cur][0], pos)
+
+
     def seek(self, num):
         self.cur = num
         if self.cur < 0:
