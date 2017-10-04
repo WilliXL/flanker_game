@@ -5,13 +5,25 @@ import random
 import gif
 import functions
 
+maps = []
+def loadMaps(screen):
+    maps = []
+    (width,height) = screen.get_size()
+    path = os.path.dirname(os.path.realpath(__file__)) + os.sep
+    for i in range(7):
+        maps += [gif.GIFImage(path + 'map' + str(i) + '.gif')]
+        pygame.draw.rect(screen,Color("yellow"),(width/10,(height/10) * 8,(width/10) * i,height/9))
+        pygame.display.flip()   
+    return maps
 def menuLoop(screen):
     (width,height) = screen.get_size()
     (midX,midY) = (width/2,height/2)
     quit = False
     fishY = [(clickLoop,410/1080),    (exerLoop,530/1080),
              (stepLoop,650/1080),(taskLoop,770/1080)]
-    while(not quit): 
+    global maps
+    maps = loadMaps(screen) 
+    while(not quit):
         background = \
         pygame.image.load(os.path.dirname(os.path.realpath(__file__)) +
                                           os.sep + 'Menu Screen 3.0.png')
@@ -437,6 +449,7 @@ def compLoop(screen):
     incorrectImage = pygame.transform.scale(incorrectImage,screen.get_size())
     correctImage   = pygame.transform.scale(  correctImage,screen.get_size())
     data = functions.createDataDict()
+    global maps
     def trialMistake():
         nonlocal trialNum
         trialNum += 1
@@ -496,9 +509,6 @@ def compLoop(screen):
     for image in readyImages:
         temp += [pygame.transform.scale(image,screen.get_size())]
     readyImages = temp
-    maps = []
-    for i in range(7):
-        maps += [gif.GIFImage(path + 'map' + str(i) + '.gif')]    
 #    for i in range(0,len(readyImages)):         
 #        while(not ready):
 #            for event in pygame.event.get():
@@ -509,6 +519,7 @@ def compLoop(screen):
 #        ready = False
     pygame.event.get()
     reset = False
+    
     while(trial): 
         if trialNum >= trialsPerBlock:
             block += 1
