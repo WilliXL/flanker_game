@@ -98,6 +98,7 @@ def menuLoop(screen):
 
 
 def stepLoop(screen):
+    path = os.path.dirname(os.path.realpath(__file__)) + os.sep
     print("!")
     difficulty = 0
     pygame.mixer.music.load(path + "temp.mp3")
